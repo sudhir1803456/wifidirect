@@ -3,6 +3,8 @@ package com.wifidirect.app;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import java.util.Collection;
+import android.net.wifi.p2p.WifiP2pDevice;
 
 public class MainActivity extends Activity implements PeerChangeCallback {
     private MyCustomForm form;
@@ -24,11 +26,6 @@ public class MainActivity extends Activity implements PeerChangeCallback {
             form.showToast("Your device does NOT support Aware");
         }
 
-        // form.setOnOkClicked(input -> {
-        //     Log.d(LogTags.AWARE_ASM, "OK clicked with input: " + input);
-        //     form.showToast("You entered: " + input);
-        // });
-
         Log.d(LogTags.AWARE_ASM, "MainActivity UI successfully created");
         
     }
@@ -47,9 +44,18 @@ public class MainActivity extends Activity implements PeerChangeCallback {
     }   
     // CALLBACK IMPLEMENTATION
     @Override
-    public void onResult(String name, String MAC) {
-        Log.d(LogTags.AWARE_ASM, "Callback from WifiDirectHandler: " + name + " and "+ MAC);
-        form.showToast("P2P search devices: "+name +" "+MAC);
-        form.AddDeviceNameAndMACIntoList(name,MAC);
+    public void onResult(Collection<WifiP2pDevice>p2pDevices) {
+        form.removeAllViews();
+        if (p2pDevices.isEmpty())
+        {
+            form.AddDeviceNameAndMACIntoList("No P2P devices","No P2P MAC Available");
+            return;
+        }
+        for (WifiP2pDevice dev : p2pDevices) {
+            Log.d(LogTags.AWARE_ASM, "P2P Device and P2P MAC" + dev.deviceName + ": "+dev.deviceAddress);
+            form.showToast("P2P search devices: "+dev.deviceName +" "+dev.deviceAddress);
+            form.AddDeviceNameAndMACIntoList(dev.deviceName,dev.deviceAddress);
+        }
+        Log.d(LogTags.AWARE_ASM, "p2pDevices changes");
     }
 }

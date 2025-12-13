@@ -26,19 +26,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
             public void onPeersAvailable(WifiP2pDeviceList peers) {
                 Log.d("P2P", "Peers found: " + peers.getDeviceList().size());
                 Collection<WifiP2pDevice> p2pDevices = peers.getDeviceList();
-
-                if (p2pDevices.isEmpty())
-                {
-                    peerChangeCb.onResult("No P2P devices","No P2P MAC Available");
-                    return;
-                }
-
-                for (WifiP2pDevice dev : p2pDevices) {
-                    Log.d(LogTags.AWARE_ASM, "P2P Device: " + dev.deviceName);
-                    Log.d(LogTags.AWARE_ASM, "P2P MAC: " + dev.deviceAddress);
-
-                    peerChangeCb.onResult(dev.deviceName,dev.deviceAddress);
-                }
+                peerChangeCb.onResult(p2pDevices);
             }
         };
 

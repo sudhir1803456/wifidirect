@@ -1,5 +1,6 @@
 package com.wifidirect.app;
-
+import android.util.TypedValue;
+import android.graphics.Color;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -50,6 +51,19 @@ private void createUi()
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT));
 
+// ----- First input box -----
+    TextView mainInput = new TextView(context);
+    mainInput.setHint("###### P2P Available devices ######");
+    mainInput.setPadding(dpToPx(12), dpToPx(12), dpToPx(12), dpToPx(12));
+    mainInput.setBackgroundResource(android.R.drawable.editbox_background);
+    LinearLayout.LayoutParams inputParams = new LinearLayout.LayoutParams(
+            dpToPx(300),
+            ViewGroup.LayoutParams.WRAP_CONTENT);
+    inputParams.gravity = Gravity.CENTER_HORIZONTAL;  // center it
+    inputParams.setMargins(0, dpToPx(16), 0, dpToPx(16));
+    mainInput.setLayoutParams(inputParams);
+    rootLayout.addView(mainInput);
+
     // ----- Spinner (dropdown) for Publish / Subscribe -----
     modeSpinner = new Spinner(context);
     List<String> modes = new ArrayList<>();
@@ -93,45 +107,6 @@ private void createUi()
         public void onNothingSelected(AdapterView<?> parent) {
             // no-op
         }
-    });
-
-    // // ----- First input box -----
-    // mainInput = new EditText(context);
-    // mainInput.setHint("Enter MAC Address");
-    // mainInput.setPadding(dpToPx(12), dpToPx(12), dpToPx(12), dpToPx(12));
-    // mainInput.setBackgroundResource(android.R.drawable.editbox_background);
-    // LinearLayout.LayoutParams inputParams = new LinearLayout.LayoutParams(
-    //         dpToPx(300),
-    //         ViewGroup.LayoutParams.WRAP_CONTENT);
-    // inputParams.gravity = Gravity.CENTER_HORIZONTAL;  // center it
-    // inputParams.setMargins(0, dpToPx(16), 0, dpToPx(16));
-    // mainInput.setLayoutParams(inputParams);
-    // rootLayout.addView(mainInput);
-// ----- Non-editable text item -----
-    mainText = new TextView(context);
-    // mainText.setText("No P2P Device Available");  // fixed text
-    mainText.setPadding(dpToPx(12), dpToPx(12), dpToPx(12), dpToPx(12));
-    mainText.setGravity(Gravity.CENTER);
-    mainText.setTextSize(10);
-
-    // make it look clickable
-    mainText.setClickable(true);
-    mainText.setBackgroundResource(android.R.drawable.btn_default); // gives button look
-
-    // layout params
-    LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
-            dpToPx(300),
-            ViewGroup.LayoutParams.WRAP_CONTENT
-    );
-    // textParams.gravity = Gravity.CENTER_HORIZONTAL;
-    textParams.setMargins(0, dpToPx(16), 0, dpToPx(16));
-
-    mainText.setLayoutParams(textParams);
-    rootLayout.addView(mainText);
-
-    // click event
-    mainText.setOnClickListener(v -> {
-        Toast.makeText(context, "clicked ON ", Toast.LENGTH_SHORT).show();
     });
 
     // // ----- OK Button -----
@@ -198,13 +173,61 @@ private void createUi()
         float density = context.getResources().getDisplayMetrics().density;
         return Math.round((float) dp * density);
     }
+    private TextView createPeerTextView(String text)
+    {
+
+        TextView tv = new TextView(context);
+
+        // Text
+        tv.setText(text);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        tv.setTextColor(Color.BLACK);
+        tv.setGravity(Gravity.CENTER_VERTICAL);
+
+        // Padding
+        int pad = dpToPx(12);
+        tv.setPadding(pad, pad, pad, pad);
+
+        // Make it clickable
+        tv.setClickable(true);
+        tv.setFocusable(true);
+
+        // Ripple background (modern Android)
+        TypedValue outValue = new TypedValue();
+        context.getTheme().resolveAttribute(
+                android.R.attr.selectableItemBackground,
+                outValue,
+                true
+        );
+        tv.setBackgroundResource(outValue.resourceId);
+
+        // Layout params (responsive width)
+        LinearLayout.LayoutParams params =
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+        params.setMargins(0, dpToPx(8), 0, dpToPx(8));
+        tv.setLayoutParams(params);
+
+        // Click action
+        tv.setOnClickListener(v ->
+                Toast.makeText(context, "Clicked: " + text, Toast.LENGTH_SHORT).show()
+        );
+
+        return tv;
+}
+
     public void AddDeviceNameAndMACIntoList(String deviceName, String deviceMAC)
     {
         ((Activity) context).runOnUiThread(() -> {
-            String oldText = mainText.getText().toString();
-            String newText = deviceName + " : " +deviceMAC;
-            String updatedText = oldText.isEmpty()? newText : oldText +"\n"+newText;
-            mainText.setText(deviceName + " and " +deviceMAC); // fixed text
+            String peerInfo = deviceName + " : " +deviceMAC;
+            TextView peerView = createPeerTextView(peerInfo);
+            rootLayout.addView(peerView);
         });
+    }
+    public void removeAllViews()
+    {
+        rootLayout.removeAllViews(); // clear old peers
     }
 }
