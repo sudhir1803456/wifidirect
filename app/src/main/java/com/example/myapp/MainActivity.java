@@ -1,4 +1,4 @@
-package com.example.myapp;
+package com.wifidirect.app;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,7 +13,6 @@ public class MainActivity extends Activity implements PeerChangeCallback {
 
         Log.d(LogTags.AWARE_ASM, "MainActivity onCreate started");
 
-        // PASS CALLBACK TO WifiDirectHandler
         wifidirect = new WifiDirectHandler(this, this);
 
         AwareHandler aware  = new AwareHandler(this);

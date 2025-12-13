@@ -1,6 +1,6 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-3    package="com.example.myapp"
+3    package="com.wifidirect.app"
 4    android:versionCode="1"
 5    android:versionName="1.0" >
 6
@@ -44,14 +44,14 @@
 26        <!-- Broadcast receiver -->
 27        <receiver
 27-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:17:9-19:40
-28            android:name="com.example.myapp.WiFiDirectBroadcastReceiver"
+28            android:name="com.wifidirect.app.WiFiDirectBroadcastReceiver"
 28-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:18:13-56
 29            android:exported="false" />
 29-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:19:13-37
 30
 31        <activity
 31-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:20:9-27:20
-32            android:name="com.example.myapp.MainActivity"
+32            android:name="com.wifidirect.app.MainActivity"
 32-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:21:13-41
 33            android:exported="true" >
 33-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:22:13-36

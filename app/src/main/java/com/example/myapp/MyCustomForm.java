@@ -1,4 +1,4 @@
-package com.example.myapp;
+package com.wifidirect.app;
 
 import android.content.Context;
 import android.util.Log;

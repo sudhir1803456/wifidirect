@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.myapp"
+    package="com.wifidirect.app"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -25,11 +25,11 @@
 
         <!-- Broadcast receiver -->
         <receiver
-            android:name="com.example.myapp.WiFiDirectBroadcastReceiver"
+            android:name="com.wifidirect.app.WiFiDirectBroadcastReceiver"
             android:exported="false" />
 
         <activity
-            android:name="com.example.myapp.MainActivity"
+            android:name="com.wifidirect.app.MainActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

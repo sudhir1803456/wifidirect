@@ -51,13 +51,13 @@ INJECTED from /home/sudhir/practice/app/app/src/main/AndroidManifest.xml:12:5-28
 		INJECTED from /home/sudhir/practice/app/app/src/main/AndroidManifest.xml
 	android:label
 		ADDED from /home/sudhir/practice/app/app/src/main/AndroidManifest.xml:14:9-42
-receiver#com.example.myapp.WiFiDirectBroadcastReceiver
+receiver#com.wifidirect.app.WiFiDirectBroadcastReceiver
 ADDED from /home/sudhir/practice/app/app/src/main/AndroidManifest.xml:17:9-19:40
 	android:exported
 		ADDED from /home/sudhir/practice/app/app/src/main/AndroidManifest.xml:19:13-37
 	android:name
 		ADDED from /home/sudhir/practice/app/app/src/main/AndroidManifest.xml:18:13-56
-activity#com.example.myapp.MainActivity
+activity#com.wifidirect.app.MainActivity
 ADDED from /home/sudhir/practice/app/app/src/main/AndroidManifest.xml:20:9-27:20
 	android:exported
 		ADDED from /home/sudhir/practice/app/app/src/main/AndroidManifest.xml:22:13-36

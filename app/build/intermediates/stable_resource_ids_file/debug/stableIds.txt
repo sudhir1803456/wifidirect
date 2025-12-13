@@ -1,1 +1,1 @@
-com.example.myapp:string/app_name = 0x7f010000
+com.wifidirect.app:string/app_name = 0x7f010000

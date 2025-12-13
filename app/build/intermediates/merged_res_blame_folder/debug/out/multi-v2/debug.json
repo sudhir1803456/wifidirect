@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.myapp-merged_res-4:/values_values.arsc.flat",
+            "outputFile": "com.wifidirect.app-merged_res-4:/values_values.arsc.flat",
             "map": [
                 {
                     "source": "/home/sudhir/practice/app/app/src/main/res/values/strings.xml",

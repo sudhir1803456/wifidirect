@@ -1,4 +1,4 @@
-package com.example.myapp;
+package com.wifidirect.app;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -1,6 +1,6 @@
-#Sat Dec 13 11:59:05 IST 2025
-base.1=/home/sudhir/practice/app/app/build/intermediates/dex/debug/mergeProjectDexDebug/1/classes.dex
-path.1=1/classes.dex
+#Sat Dec 13 15:52:23 IST 2025
+base.1=/home/sudhir/practice/app/app/build/intermediates/dex/debug/mergeProjectDexDebug/12/classes.dex
+path.1=12/classes.dex
 base.0=/home/sudhir/practice/app/app/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
 renamed.1=classes2.dex
 renamed.0=classes.dex

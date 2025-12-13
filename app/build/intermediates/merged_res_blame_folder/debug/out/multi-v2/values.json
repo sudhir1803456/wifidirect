@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.myapp-mergeDebugResources-2:/values/values.xml",
+            "outputFile": "com.wifidirect.app-mergeDebugResources-2:/values/values.xml",
             "map": [
                 {
                     "source": "/home/sudhir/practice/app/app/src/main/res/values/strings.xml",
