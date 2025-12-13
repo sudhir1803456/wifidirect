@@ -1,0 +1,71 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.myapp"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-feature android:name="android.hardware.wifi.direct" />
+11-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:3:5-65
+11-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:3:19-62
+12
+13    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+13-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:4:5-76
+13-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:4:22-73
+14    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+14-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:5:5-76
+14-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:5:22-73
+15    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+15-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:6:5-79
+15-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:6:22-76
+16    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+16-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:7:5-81
+16-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:7:22-78
+17    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" />
+17-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:8:5-78
+17-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:8:22-75
+18    <uses-permission android:name="android.permission.LOCAL_MAC_ADDRESS" />
+18-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:9:5-76
+18-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:9:22-73
+19    <uses-permission android:name="android.permission.INTERNET" />
+19-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:10:5-66
+19-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:10:22-64
+20
+21    <application
+21-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:12:5-28:19
+22        android:debuggable="true"
+23        android:extractNativeLibs="true"
+24        android:label="WifiDirectTestApp" >
+24-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:14:9-42
+25
+26        <!-- Broadcast receiver -->
+27        <receiver
+27-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:17:9-19:40
+28            android:name="com.example.myapp.WiFiDirectBroadcastReceiver"
+28-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:18:13-56
+29            android:exported="false" />
+29-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:19:13-37
+30
+31        <activity
+31-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:20:9-27:20
+32            android:name="com.example.myapp.MainActivity"
+32-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:21:13-41
+33            android:exported="true" >
+33-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:22:13-36
+34            <intent-filter>
+34-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:23:13-26:29
+35                <action android:name="android.intent.action.MAIN" />
+35-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:24:17-68
+35-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:24:25-66
+36
+37                <category android:name="android.intent.category.LAUNCHER" />
+37-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:25:17-76
+37-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:25:27-74
+38            </intent-filter>
+39        </activity>
+40    </application>
+41
+42</manifest>
