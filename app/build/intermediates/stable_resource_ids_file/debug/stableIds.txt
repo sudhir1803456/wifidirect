@@ -1,1 +1,6 @@
-com.wifidirect.app:string/app_name = 0x7f010000
+com.wifidirect.app:string/app_name = 0x7f030000
+com.wifidirect.app:layout/main_layout = 0x7f020000
+com.wifidirect.app:id/refreshButton = 0x7f010002
+com.wifidirect.app:id/wifidirectTest = 0x7f010003
+com.wifidirect.app:id/mainLinearLayout = 0x7f010001
+com.wifidirect.app:id/DeviceList = 0x7f010000

@@ -90,7 +90,11 @@ public class WifiDirectHandler {
         // START SCANNING
         manager.discoverPeers(p2pChannel, p2pActionListner);
     }
-
+    public void startdiscovery()
+    {
+        Log.d(LogTags.AWARE_ASM, "startdiscovery");
+        manager.discoverPeers(p2pChannel, p2pActionListner);
+    }
     public void unregister() {
         Log.d(LogTags.AWARE_ASM, "unregister");
 
