@@ -27,7 +27,7 @@ public class MainActivity extends Activity implements PeerChangeCallback {
         wifidirect = new WifiDirectHandler(this, this);
 
         AwareHandler aware  = new AwareHandler(this);
-        form = new MyCustomForm(this);
+        form = new MyCustomForm(this,this);
         Button refreshButton = findViewById(R.id.refreshButton);
         refreshButton.setOnClickListener(v -> {
             Log.d(LogTags.AWARE_ASM,"refreshbutton clicked, starting discovery again");
@@ -58,7 +58,7 @@ public class MainActivity extends Activity implements PeerChangeCallback {
     }   
     // CALLBACK IMPLEMENTATION
     @Override
-    public void onResult(Collection<WifiP2pDevice>p2pDevices) {
+    public void OnPeerChange(Collection<WifiP2pDevice>p2pDevices) {
         form.clearDeviceListOnly(parentLayout);
 
         String peerInfo = "";
@@ -76,4 +76,17 @@ public class MainActivity extends Activity implements PeerChangeCallback {
         }
         Log.d(LogTags.AWARE_ASM, "p2pDevices changes");
     }
+    @Override
+    public void ConnectToDevice(String deviceInfo)
+    {
+        int startIndex = deviceInfo.indexOf(":");
+        String deviceMAC = deviceInfo.substring(startIndex+1);
+        wifidirect.connectToDevice(deviceMAC);
+    }
+    @Override
+    public void showToastPopup(String text)
+    {
+        form.showToast(text);
+    }
+    
 }

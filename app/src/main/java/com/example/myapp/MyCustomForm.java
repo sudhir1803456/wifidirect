@@ -15,7 +15,9 @@ import java.util.List;
 import android.app.Activity;
 public class MyCustomForm {
     private Context context;
-    public MyCustomForm(Context context) {
+    private PeerChangeCallback peerChangeCb;
+    public MyCustomForm(Context context,PeerChangeCallback cb) {
+        this.peerChangeCb = cb;
         this.context = context;
         Log.d(LogTags.AWARE_ASM, "MyCustomForm: constructor");
     }
@@ -69,10 +71,11 @@ public class MyCustomForm {
         params.setMargins(0, dpToPx(8), 0, dpToPx(8));
         tv.setLayoutParams(params);
 
-        // Click action
-        tv.setOnClickListener(v ->
-                Toast.makeText(context, "Clicked: " + text, Toast.LENGTH_SHORT).show()
-        );
+        tv.setOnClickListener(v -> {
+            peerChangeCb.ConnectToDevice(text);
+            showToast("Connecting to " + text);
+        });
+
 
         return tv;
     }

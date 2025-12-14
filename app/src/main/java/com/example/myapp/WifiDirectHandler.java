@@ -22,6 +22,7 @@ public class WifiDirectHandler {
     private WifiP2pManager.Channel p2pChannel;
     private WifiP2pManager.ChannelListener p2pChannelListener;
     private WifiP2pManager.ActionListener p2pActionListner;
+    private WifiP2pManager.ActionListener p2pConnectActionListner;
     private WiFiDirectBroadcastReceiver receiver;
     private IntentFilter intentFilter;
 
@@ -61,13 +62,27 @@ public class WifiDirectHandler {
             @Override
             public void onFailure(int reason) {
                 Log.d(LogTags.AWARE_ASM, "WiFi Direct scanning FAILED: " + reason);
-                // peerChangeCb.onResult("Scan failed: " + reason);
+                // peerChangeCb.OnPeerChange("Scan failed: " + reason);
             }
 
             @Override
             public void onSuccess() {
                 Log.d(LogTags.AWARE_ASM, "WiFi Direct scanning SUCCESS");
-                // peerChangeCb.onResult("Scan success");
+                // peerChangeCb.OnPeerChange("Scan success");
+            }
+        };
+        // connect ACTION LISTENER
+        p2pConnectActionListner = new WifiP2pManager.ActionListener() {
+            @Override
+            public void onFailure(int reason) {
+                Log.d(LogTags.AWARE_ASM, "connect failed: " + reason);
+                peerChangeCb.showToastPopup("connect failed!");
+            }
+
+            @Override
+            public void onSuccess() {
+                Log.d(LogTags.AWARE_ASM, "connect SUCCESS");
+                peerChangeCb.showToastPopup("connect SUCCESS");
             }
         };
 
@@ -105,8 +120,12 @@ public class WifiDirectHandler {
         return isP2PSupported;
     }
 
-    public WifiP2pConfig BuildP2PConfig() {
-        return new WifiP2pConfig();
+    public void connectToDevice(String deviceMAC) {
+        Log.d(LogTags.AWARE_ASM, "connecting to : "+deviceMAC);
+
+        WifiP2pConfig config = new WifiP2pConfig();
+        config.deviceAddress = deviceMAC;
+        manager.connect(p2pChannel,config,p2pConnectActionListner);
     }
 }
 

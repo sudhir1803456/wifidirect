@@ -26,7 +26,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
             public void onPeersAvailable(WifiP2pDeviceList peers) {
                 Log.d("P2P", "Peers found: " + peers.getDeviceList().size());
                 Collection<WifiP2pDevice> p2pDevices = peers.getDeviceList();
-                peerChangeCb.onResult(p2pDevices);
+                peerChangeCb.OnPeerChange(p2pDevices);
             }
         };
 
