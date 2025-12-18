@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        
+        android:usesCleartextTraffic="true"
         android:label="WifiDirectTestApp">
         <!-- <LinearLayout
             android:id="@+id/peerContainer"

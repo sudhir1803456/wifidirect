@@ -21,7 +21,8 @@
     <application
         android:debuggable="true"
         android:extractNativeLibs="true"
-        android:label="WifiDirectTestApp" >
+        android:label="WifiDirectTestApp"
+        android:usesCleartextTraffic="true" >
 
         <!--
              <LinearLayout

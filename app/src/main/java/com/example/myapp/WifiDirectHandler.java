@@ -11,6 +11,9 @@ import android.net.wifi.p2p.WifiP2pConfig;
 import android.content.IntentFilter;
 import android.content.BroadcastReceiver;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WpsInfo;
+import android.net.wifi.p2p.WifiP2pConfig.Builder;
+import android.net.wifi.p2p.WifiP2pGroup;
 
 public class WifiDirectHandler {
 
@@ -23,6 +26,7 @@ public class WifiDirectHandler {
     private WifiP2pManager.ChannelListener p2pChannelListener;
     private WifiP2pManager.ActionListener p2pActionListner;
     private WifiP2pManager.ActionListener p2pConnectActionListner;
+    private WifiP2pManager.ActionListener p2pRemoveGroupListner;
     private WiFiDirectBroadcastReceiver receiver;
     private IntentFilter intentFilter;
 
@@ -62,13 +66,11 @@ public class WifiDirectHandler {
             @Override
             public void onFailure(int reason) {
                 Log.d(LogTags.AWARE_ASM, "WiFi Direct scanning FAILED: " + reason);
-                // peerChangeCb.OnPeerChange("Scan failed: " + reason);
             }
 
             @Override
             public void onSuccess() {
                 Log.d(LogTags.AWARE_ASM, "WiFi Direct scanning SUCCESS");
-                // peerChangeCb.OnPeerChange("Scan success");
             }
         };
         // connect ACTION LISTENER
@@ -85,7 +87,19 @@ public class WifiDirectHandler {
                 peerChangeCb.showToastPopup("connect SUCCESS");
             }
         };
+        //remove group listener
+        // ACTION LISTENER
+        p2pRemoveGroupListner = new WifiP2pManager.ActionListener() {
+            @Override
+            public void onFailure(int reason) {
+                Log.d(LogTags.AWARE_ASM, "group remove failed  " + reason);
+            }
 
+            @Override
+            public void onSuccess() {
+                Log.d(LogTags.AWARE_ASM, "group removed SUCCESS");
+            }
+        };
         // INIT CHANNEL
         p2pChannel = manager.initialize(context, Looper.getMainLooper(), p2pChannelListener);
 
@@ -125,7 +139,37 @@ public class WifiDirectHandler {
 
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = deviceMAC;
+        config.wps = new WpsInfo();
+        config.wps.setup = WpsInfo.PBC;
         manager.connect(p2pChannel,config,p2pConnectActionListner);
     }
+
+    public void disconnectDevice()
+    {
+        if (manager == null || p2pChannel == null) {
+            Log.d(LogTags.AWARE_ASM,"Cannot disconnect: manager or channel is null");
+            return;
+        }
+        manager.requestGroupInfo(p2pChannel, new WifiP2pManager.GroupInfoListener() {
+                @Override
+                public void onGroupInfoAvailable(WifiP2pGroup group) {
+                    if (group != null) {
+                        manager.removeGroup(p2pChannel, new WifiP2pManager.ActionListener() {
+
+                            @Override
+                            public void onSuccess() {
+                                Log.d(LogTags.AWARE_ASM, "removeGroup onSuccess -");
+                            }
+
+                            @Override
+                            public void onFailure(int reason) {
+                                Log.d(LogTags.AWARE_ASM, "removeGroup onFailure -" + reason);
+                            }
+                        });
+                    }
+                }
+            });
+    }
+        
 }
 

@@ -51,6 +51,8 @@ INJECTED from /home/sudhir/practice/app/app/src/main/AndroidManifest.xml:12:5-33
 		INJECTED from /home/sudhir/practice/app/app/src/main/AndroidManifest.xml
 	android:label
 		ADDED from /home/sudhir/practice/app/app/src/main/AndroidManifest.xml:14:9-42
+	android:usesCleartextTraffic
+		ADDED from /home/sudhir/practice/app/app/src/main/AndroidManifest.xml:13:9-44
 receiver#com.wifidirect.app.WiFiDirectBroadcastReceiver
 ADDED from /home/sudhir/practice/app/app/src/main/AndroidManifest.xml:22:9-24:40
 	android:exported

@@ -34,7 +34,7 @@ public class MyCustomForm {
         float density = context.getResources().getDisplayMetrics().density;
         return Math.round((float) dp * density);
     }
-    private TextView createPeerTextView(String text)
+    private TextView createTextView(String text)
     {
 
         TextView tv = new TextView(context);
@@ -72,8 +72,16 @@ public class MyCustomForm {
         tv.setLayoutParams(params);
 
         tv.setOnClickListener(v -> {
-            peerChangeCb.ConnectToDevice(text);
-            showToast("Connecting to " + text);
+            String deviceMAC = text.split(" - ")[1];
+            Log.d(LogTags.AWARE_ASM, "Device MAC is "+deviceMAC);
+            if(!deviceMAC.isEmpty())
+            {
+                peerChangeCb.ConnectToDevice(deviceMAC);
+            }
+            else{
+                peerChangeCb.DisconnectToDevice();
+            }
+            // showToast("Connecting to " + text);
         });
 
 
@@ -83,19 +91,17 @@ public class MyCustomForm {
     public void AddDeviceNameAndMACIntoList(String deviceName, String deviceMAC, LinearLayout rootLayout)
     {
         ((Activity) context).runOnUiThread(() -> {
-            String peerInfo = deviceName + " : " +deviceMAC;
-            TextView peerView = createPeerTextView(peerInfo);
-            rootLayout.addView(peerView);
+            String peerInfo = deviceName + " - " +deviceMAC;
+            TextView peerView = createTextView(peerInfo);
+                rootLayout.addView(peerView);
         });
     }
-    public void clearDeviceListOnly(LinearLayout rootLayout) {
-        int childCount = rootLayout.getChildCount();
-        for (int i = childCount - 1; i >= 0; i--) {
-            View v = rootLayout.getChildAt(i);
-            if (v.getId() != R.id.wifidirectTest && v.getId() != R.id.refreshButton) {
-                rootLayout.removeViewAt(i);
-            }
-        }
+    public void AddDeviceToConnectedLayout(String deviceName, LinearLayout rootLayout)
+    {
+        ((Activity) context).runOnUiThread(() -> {
+            TextView peerView = createTextView("connected to "+deviceName+"(tap to disconnect)");
+                rootLayout.addView(peerView);
+        });
     }
 
 }

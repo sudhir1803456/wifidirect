@@ -1,8 +1,12 @@
 R_DEF: Internal format may change without notice
 local
-id DeviceList
+id connectedDevice
+id deviceContainer
+id deviceItem
+id deviceScroll
 id mainLinearLayout
 id refreshButton
 id wifidirectTest
+layout device_item
 layout main_layout
 string app_name
