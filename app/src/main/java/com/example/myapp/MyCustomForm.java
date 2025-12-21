@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+
 public class MyCustomForm {
     private Context context;
     private PeerChangeCallback peerChangeCb;
@@ -28,7 +30,9 @@ public class MyCustomForm {
 
     // Utility: show toast
     public void showToast(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+        ((Activity) context).runOnUiThread(() ->{
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+        });
         Log.d(LogTags.AWARE_ASM, "MyCustomForm: Toast shown -> " + msg);
     }
 
@@ -135,7 +139,7 @@ public class MyCustomForm {
         });
         fileLayout.addView(selectFileButton);
     }
-    public void AddSendButton(LinearLayout fileLayout)
+    public void AddSendButton(LinearLayout fileLayout,Uri fileUri)
     {
         Log.d(LogTags.AWARE_ASM,"creating file button");
         // Create button dynamically
@@ -153,7 +157,9 @@ public class MyCustomForm {
         sendButton.setPadding(16, 16, 16, 16);
         // Add click listener
         sendButton.setOnClickListener(v -> {
-            peerChangeCb.SendFile();
+            new Thread(() -> {
+                peerChangeCb.SendFileToServer(fileUri);
+            }).start();
         });
         fileLayout.addView(sendButton);
     }

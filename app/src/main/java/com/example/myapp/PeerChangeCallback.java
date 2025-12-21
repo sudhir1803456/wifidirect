@@ -2,6 +2,8 @@ package com.wifidirect.app;
 import java.util.Collection;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.content.Intent;
+import android.net.Uri;
+
 public interface PeerChangeCallback {
     void onAllPermissionsGranted();
     void onPermissionNotGranted();
@@ -15,5 +17,5 @@ public interface PeerChangeCallback {
     void OnDisconnected();
     void OnConnected();
     void StartActivityForFile(Intent intent);
-    void SendFile();
+    void SendFileToServer(Uri fileUri);
 }
