@@ -33,50 +33,69 @@
 19    <uses-permission android:name="android.permission.INTERNET" />
 19-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:10:5-66
 19-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:10:22-64
-20
-21    <application
-21-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:12:5-33:19
-22        android:debuggable="true"
-23        android:extractNativeLibs="true"
-24        android:label="WifiDirectTestApp"
-24-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:14:9-42
-25        android:usesCleartextTraffic="true" >
-25-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:13:9-44
-26
-27        <!--
-28             <LinearLayout
-29            android:id="@+id/peerContainer"
-30            android:orientation="vertical"
-31            android:layout_width="match_parent"
-32            android:layout_height="wrap_content"/>
-33        -->
+20    <!-- storage permission -->
+21    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+21-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:12:5-79
+21-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:12:22-77
+22    <uses-permission
+22-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:13:5-14:37
+23        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+23-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:13:22-78
+24        android:maxSdkVersion="28" />
+24-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:14:9-35
+25    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+25-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:15:5-75
+25-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:15:22-73
+26    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+26-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:16:5-74
+26-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:16:22-72
+27    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+27-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:17:5-74
+27-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:17:22-72
+28
+29    <application
+29-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:19:5-40:19
+30        android:debuggable="true"
+31        android:extractNativeLibs="true"
+32        android:label="WifiDirectTestApp"
+32-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:21:9-42
+33        android:usesCleartextTraffic="true" >
+33-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:20:9-44
 34
-35
-36        <!-- Broadcast receiver -->
-37        <receiver
-37-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:22:9-24:40
-38            android:name="com.wifidirect.app.WiFiDirectBroadcastReceiver"
-38-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:23:13-56
-39            android:exported="false" />
-39-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:24:13-37
-40
-41        <activity
-41-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:25:9-32:20
-42            android:name="com.wifidirect.app.MainActivity"
-42-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:26:13-41
-43            android:exported="true" >
-43-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:27:13-36
-44            <intent-filter>
-44-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:28:13-31:29
-45                <action android:name="android.intent.action.MAIN" />
-45-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:29:17-68
-45-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:29:25-66
-46
-47                <category android:name="android.intent.category.LAUNCHER" />
-47-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:30:17-76
-47-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:30:27-74
-48            </intent-filter>
-49        </activity>
-50    </application>
-51
-52</manifest>
+35        <!--
+36             <LinearLayout
+37            android:id="@+id/peerContainer"
+38            android:orientation="vertical"
+39            android:layout_width="match_parent"
+40            android:layout_height="wrap_content"/>
+41        -->
+42
+43
+44        <!-- Broadcast receiver -->
+45        <receiver
+45-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:29:9-31:40
+46            android:name="com.wifidirect.app.WiFiDirectBroadcastReceiver"
+46-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:30:13-56
+47            android:exported="false" />
+47-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:31:13-37
+48
+49        <activity
+49-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:32:9-39:20
+50            android:name="com.wifidirect.app.MainActivity"
+50-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:33:13-41
+51            android:exported="true" >
+51-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:34:13-36
+52            <intent-filter>
+52-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:35:13-38:29
+53                <action android:name="android.intent.action.MAIN" />
+53-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:36:17-68
+53-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:36:25-66
+54
+55                <category android:name="android.intent.category.LAUNCHER" />
+55-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:37:17-76
+55-->/home/sudhir/practice/app/app/src/main/AndroidManifest.xml:37:27-74
+56            </intent-filter>
+57        </activity>
+58    </application>
+59
+60</manifest>

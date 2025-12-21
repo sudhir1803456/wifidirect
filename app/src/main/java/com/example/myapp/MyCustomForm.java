@@ -9,13 +9,16 @@ import android.widget.Toast;
 import android.view.ViewGroup;
 import android.view.Gravity;
 import android.widget.TextView;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
 import android.app.Activity;
+import android.content.Intent;
 public class MyCustomForm {
     private Context context;
     private PeerChangeCallback peerChangeCb;
+
     public MyCustomForm(Context context,PeerChangeCallback cb) {
         this.peerChangeCb = cb;
         this.context = context;
@@ -72,16 +75,19 @@ public class MyCustomForm {
         tv.setLayoutParams(params);
 
         tv.setOnClickListener(v -> {
-            String deviceMAC = text.split(" - ")[1];
-            Log.d(LogTags.AWARE_ASM, "Device MAC is "+deviceMAC);
+            String[] parts = text.split("-");
+            String deviceMAC = "";
+            if (parts.length > 1) {
+                deviceMAC = parts[1];
+            }
+            Log.d(LogTags.AWARE_ASM, "Device MAC is->"+deviceMAC);
             if(!deviceMAC.isEmpty())
             {
                 peerChangeCb.ConnectToDevice(deviceMAC);
             }
             else{
-                peerChangeCb.DisconnectToDevice();
+                peerChangeCb.DisconnectPeerDevice();
             }
-            // showToast("Connecting to " + text);
         });
 
 
@@ -91,7 +97,7 @@ public class MyCustomForm {
     public void AddDeviceNameAndMACIntoList(String deviceName, String deviceMAC, LinearLayout rootLayout)
     {
         ((Activity) context).runOnUiThread(() -> {
-            String peerInfo = deviceName + " - " +deviceMAC;
+            String peerInfo = deviceName + "-" +deviceMAC;
             TextView peerView = createTextView(peerInfo);
                 rootLayout.addView(peerView);
         });
@@ -102,6 +108,54 @@ public class MyCustomForm {
             TextView peerView = createTextView("connected to "+deviceName+"(tap to disconnect)");
                 rootLayout.addView(peerView);
         });
+    }
+    public void AddFileButton(LinearLayout fileLayout)
+    {
+        Log.d(LogTags.AWARE_ASM,"creating file button");
+        // Create button dynamically
+        Button selectFileButton = new Button(context);
+        selectFileButton.setText("Select File");
+       // Create layout params with WRAP_CONTENT width & height
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        // Set gravity to center horizontally
+        params.gravity = Gravity.CENTER_HORIZONTAL;
+        // Apply the layout params to the button
+        selectFileButton.setLayoutParams(params);
+        selectFileButton.setPadding(16, 16, 16, 16);
+        // Add click listener
+        selectFileButton.setOnClickListener(v -> {
+            // Open file picker
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("*/*"); // all file types
+            peerChangeCb.StartActivityForFile(intent);
+        });
+        fileLayout.addView(selectFileButton);
+    }
+    public void AddSendButton(LinearLayout fileLayout)
+    {
+        Log.d(LogTags.AWARE_ASM,"creating file button");
+        // Create button dynamically
+        Button sendButton = new Button(context);
+        sendButton.setText("Send");
+       // Create layout params with WRAP_CONTENT width & height
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        // Set gravity to center horizontally
+        params.gravity = Gravity.CENTER_HORIZONTAL;
+        // Apply the layout params to the button
+        sendButton.setLayoutParams(params);
+        sendButton.setPadding(16, 16, 16, 16);
+        // Add click listener
+        sendButton.setOnClickListener(v -> {
+            peerChangeCb.SendFile();
+        });
+        fileLayout.addView(sendButton);
     }
 
 }

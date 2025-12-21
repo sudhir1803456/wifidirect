@@ -136,11 +136,11 @@ public class WifiDirectHandler {
 
     public void connectToDevice(String deviceMAC) {
         Log.d(LogTags.AWARE_ASM, "connecting to : "+deviceMAC);
-
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = deviceMAC;
         config.wps = new WpsInfo();
         config.wps.setup = WpsInfo.PBC;
+        config.groupOwnerIntent = 0;
         manager.connect(p2pChannel,config,p2pConnectActionListner);
     }
 
@@ -151,24 +151,32 @@ public class WifiDirectHandler {
             return;
         }
         manager.requestGroupInfo(p2pChannel, new WifiP2pManager.GroupInfoListener() {
-                @Override
-                public void onGroupInfoAvailable(WifiP2pGroup group) {
-                    if (group != null) {
+            @Override
+            public void onGroupInfoAvailable(WifiP2pGroup group) {
+                if (group != null) {
+                    try {
                         manager.removeGroup(p2pChannel, new WifiP2pManager.ActionListener() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d(LogTags.AWARE_ASM, "Group removed successfully");
+                        }
 
-                            @Override
-                            public void onSuccess() {
-                                Log.d(LogTags.AWARE_ASM, "removeGroup onSuccess -");
-                            }
-
-                            @Override
-                            public void onFailure(int reason) {
-                                Log.d(LogTags.AWARE_ASM, "removeGroup onFailure -" + reason);
-                            }
-                        });
+                        @Override
+                        public void onFailure(int reason) {
+                            Log.d(LogTags.AWARE_ASM, "Remove group failed. Reason = " + reason);
+                        }
+                    });
+                    } catch (SecurityException e) {
+                        Log.d(LogTags.AWARE_ASM, "SecurityException: Missing permission?", e);
+                    } catch (IllegalStateException e) {
+                    Log.d(LogTags.AWARE_ASM, "IllegalStateException: Wrong WiFi P2P state", e);
+                    } catch (NullPointerException e) {
+                        Log.d(LogTags.AWARE_ASM, "NullPointerException: manager or channel is null", e);
                     }
+
                 }
-            });
+            }
+        });
     }
         
 }

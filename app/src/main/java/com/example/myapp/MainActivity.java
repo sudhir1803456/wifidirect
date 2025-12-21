@@ -12,13 +12,19 @@ import java.net.Socket;
 import java.net.ServerSocket;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import android.content.Intent;
+import android.net.Uri;
 
 public class MainActivity extends Activity implements PeerChangeCallback {
+
     private MyCustomForm form;
     private WifiDirectHandler wifidirect;
+    // private CheckPermission checkpermission;
     TextView peerDevice;
     LinearLayout deviceListLayout;
     LinearLayout connectedDeviceLayout;
+    private static final int FILE_REQUEST_CODE = 2001;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,25 +33,42 @@ public class MainActivity extends Activity implements PeerChangeCallback {
         connectedDeviceLayout = findViewById(R.id.connectedDevice);//container for connected device
         TextView text = findViewById(R.id.wifidirectTest);
         Log.d(LogTags.AWARE_ASM, "MainActivity onCreate started");
+        // checkpermission = new CheckPermission(this,this);
 
         wifidirect = new WifiDirectHandler(this, this);
-
-        AwareHandler aware  = new AwareHandler(this);
         form = new MyCustomForm(this,this);
         Button refreshButton = findViewById(R.id.refreshButton);
         refreshButton.setOnClickListener(v -> {
             Log.d(LogTags.AWARE_ASM,"refreshbutton clicked, starting discovery again");
             deviceListLayout.removeAllViews();
             wifidirect.startdiscovery();
+            // if(checkpermission.isAllPermissionAccepted())
+            // {
+            //     wifidirect.startdiscovery();
+            // }
+            // else
+            // {
+            //     checkPermission.checkAndRequestPermissions();  // new public method
+            // }
         });
-        if (aware.AwareSupportedDevice()) {
-            form.showToast("Your device supports Aware");
-        } else {
-            form.showToast("Your device does NOT support Aware");
-        }
-
         Log.d(LogTags.AWARE_ASM, "MainActivity UI successfully created");
         
+    }
+    @Override
+    public void StartActivityForFile(Intent intent)
+    {
+        startActivityForResult(intent,FILE_REQUEST_CODE);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        
+        if (requestCode == FILE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            Uri fileUri = data.getData();
+            // Do something with the selected file
+            form.AddSendButton(connectedDeviceLayout);
+            form.showToast("Selected: " + fileUri.getLastPathSegment());
+        }
     }
     @Override
     protected void onResume() {
@@ -53,7 +76,16 @@ public class MainActivity extends Activity implements PeerChangeCallback {
         super.onResume();
         wifidirect.register();
     }
-
+    @Override
+    public void onAllPermissionsGranted()
+    {
+        wifidirect.startdiscovery();
+    }
+    @Override
+    public void onPermissionNotGranted()
+    {
+        form.showToast("Please approve all the permission");
+    }
     // @Override
     // protected void onPause() {
     //     Log.d(LogTags.AWARE_ASM, "MainActivity UI onPause ");
@@ -92,6 +124,8 @@ public class MainActivity extends Activity implements PeerChangeCallback {
     public void ShowConnectedDevice(String deviceName)
     {
         form.AddDeviceToConnectedLayout(deviceName,connectedDeviceLayout);
+        form.AddFileButton(connectedDeviceLayout);
+        deviceListLayout.removeAllViews();
     }
     @Override 
     public void OnConnected()
@@ -104,7 +138,7 @@ public class MainActivity extends Activity implements PeerChangeCallback {
         connectedDeviceLayout.removeAllViews();
     }
     @Override
-    public void DisconnectToDevice()
+    public void DisconnectPeerDevice()
     {
         connectedDeviceLayout.removeAllViews();
         wifidirect.disconnectDevice();
@@ -117,12 +151,15 @@ public class MainActivity extends Activity implements PeerChangeCallback {
         new Thread(() -> {
             try {
                 ServerSocket serverSocket = new ServerSocket(8888);
+                serverSocket.setSoTimeout(60_000);
+
                 Log.d(LogTags.AWARE_ASM, "ServerSocket created, waiting for client...");
                 Socket client = serverSocket.accept();
                 Log.d(LogTags.AWARE_ASM, "Client connected: " + client.getInetAddress());
                 ((Activity) MainActivity.this).runOnUiThread(() -> {
                     form.showToast("client connected successfully!");
                 });
+                serverSocket.close();
 
             } catch (IOException e) {
                 Log.d(LogTags.AWARE_ASM,"error occured "+e);
@@ -154,6 +191,7 @@ public class MainActivity extends Activity implements PeerChangeCallback {
                 ((Activity) MainActivity.this).runOnUiThread(() -> {
                     form.showToast("connected to server successfully!");
                 });
+                socket.setSoTimeout(60_000);
             }
             catch (InterruptedException e)
             {
@@ -164,6 +202,11 @@ public class MainActivity extends Activity implements PeerChangeCallback {
                 Log.d(LogTags.AWARE_ASM,"error occured "+e);
             }
         }).start();
+    }
+    @Override
+    public void SendFile()
+    {
+        form.showToast("sending file");
     }
 
 }
