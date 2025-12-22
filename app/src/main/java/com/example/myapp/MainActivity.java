@@ -19,11 +19,14 @@ import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import android.database.Cursor;
 import android.provider.OpenableColumns;
+import java.io.OutputStream;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-
+import android.content.ContentValues;
+import android.os.Environment;
+import android.provider.MediaStore;
 public class MainActivity extends Activity implements PeerChangeCallback {
     private DataOutputStream dataOutputStream = null;
     private DataInputStream dataInputStream = null;
@@ -35,7 +38,8 @@ public class MainActivity extends Activity implements PeerChangeCallback {
     LinearLayout connectedDeviceLayout;
     private static final int FILE_REQUEST_CODE = 2001;
     private Socket socket;
-    ServerSocket serverSocket;
+    private ServerSocket serverSocket;
+    private Socket clientSocket;//at server side to accept client
     private boolean isThisDeviceClient = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,8 +153,10 @@ public class MainActivity extends Activity implements PeerChangeCallback {
     @Override
     public void OnDisconnected()
     {
+        Log.d(LogTags.AWARE_ASM,"received OnDisconnected");
         if(isThisDeviceClient && socket != null)
         {
+            Log.d(LogTags.AWARE_ASM,"socket close at client side");
             try{
                 socket.close();
             }
@@ -158,6 +164,29 @@ public class MainActivity extends Activity implements PeerChangeCallback {
                 Log.d(LogTags.AWARE_ASM,"error occured during socket close at client side"+e);
             }
             Log.d(LogTags.AWARE_ASM,"socket closed at client side");
+        }
+        if(!isThisDeviceClient)
+        {
+            if(serverSocket != null && !serverSocket.isClosed())
+            {
+                Log.d(LogTags.AWARE_ASM, "trying to close ServerSocket closed");
+                try {
+                    serverSocket.close();
+                    Log.d(LogTags.AWARE_ASM, "ServerSocket closed");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (clientSocket != null && !clientSocket.isClosed())
+            {
+                Log.d(LogTags.AWARE_ASM,"socket close at server side");
+                try {
+                    clientSocket.close();
+                    Log.d(LogTags.AWARE_ASM, "clientSocket at server side closed");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         connectedDeviceLayout.removeAllViews();
     }
@@ -182,22 +211,12 @@ public class MainActivity extends Activity implements PeerChangeCallback {
                 // serverSocket.setSoTimeout(60_000);
 
                 Log.d(LogTags.AWARE_ASM, "ServerSocket created, waiting for client...");
-                Socket clientSocket  = serverSocket.accept();
+                clientSocket  = serverSocket.accept();
                 Log.d(LogTags.AWARE_ASM, "Client connected: " + clientSocket.getInetAddress());
                 form.showToast("client connected successfully!");
                 dataInputStream = new DataInputStream(clientSocket.getInputStream());
                 receiveFile(dataInputStream);
-                clientSocket.close();
-                Log.d(LogTags.AWARE_ASM, "socket close at server side , file received successfully!");
                 form.showToast("file received successfully!");
-                if (serverSocket != null && !serverSocket.isClosed()) {
-                    try {
-                        serverSocket.close();
-                        Log.d(LogTags.AWARE_ASM, "ServerSocket closed");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
 
             } catch (IOException e) {
                 Log.d(LogTags.AWARE_ASM,"error occured "+e);
@@ -220,12 +239,8 @@ public class MainActivity extends Activity implements PeerChangeCallback {
                 Log.d(LogTags.AWARE_ASM,"thread started..");
                 Thread.sleep(3000); // wait for server
                 Log.d(LogTags.AWARE_ASM,"thread sleep over started..");
-                if(socket == null)
-                {
-                    socket = new Socket();
-                    Log.d(LogTags.AWARE_ASM,"created socket at client side");
-                }
-                Log.d(LogTags.AWARE_ASM,"new socket created..");
+                socket = new Socket();
+                Log.d(LogTags.AWARE_ASM,"created socket at client side");
                 Log.d(LogTags.AWARE_ASM, "Connecting to server at " + GOIp + ":8888");
                 if(GOIp.isEmpty())
                 {
@@ -272,33 +287,39 @@ public class MainActivity extends Activity implements PeerChangeCallback {
 
         long fileSize = dataInputStream.readLong();
         Log.d(LogTags.AWARE_ASM, "File size: " + fileSize);
-        File externalDir = new File(getExternalFilesDir(null), "WIFIDIRECT");
-        if (!externalDir.exists()) {
-            boolean created = externalDir.mkdirs();
-            if (created) {
-                Log.d(LogTags.AWARE_ASM, "WIFIDIRECT folder created in external storage");
-            } else {
-                Log.d(LogTags.AWARE_ASM, "Failed to create WIFIDIRECT folder");
-            }
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Downloads.DISPLAY_NAME, fileName);
+        values.put(MediaStore.Downloads.MIME_TYPE, "application/octet-stream");
+        values.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/WIFIDIRECT");
+
+        Uri fileUri = getContentResolver().insert(
+                MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+                values
+        );
+
+        if (fileUri == null) {
+            Log.e(LogTags.AWARE_ASM, "Failed to create download file");
+            return;
         }
 
-        File receivedFile = new File(externalDir, fileName);
-        FileOutputStream fos = new FileOutputStream(receivedFile);
-        Log.d(LogTags.AWARE_ASM, "FileOutputStream created success..");
+        OutputStream outputStream = getContentResolver().openOutputStream(fileUri);
+        if (outputStream == null) {
+            Log.e(LogTags.AWARE_ASM, "Failed to open OutputStream");
+            return;
+        }
+        Log.d(LogTags.AWARE_ASM, "OutputStream created successfully");
         int bytesRead;
         long totalRead = 0;
         byte[] buffer = new byte[4 * 1024];
 
         while (totalRead < fileSize && (bytesRead = dataInputStream.read(buffer, 0,
                 (int)Math.min(buffer.length, fileSize - totalRead))) != -1) {
-            fos.write(buffer, 0, bytesRead);
+            outputStream.write(buffer, 0, bytesRead);
             totalRead += bytesRead;
         }
-        // Here we received file
-        Log.d(LogTags.AWARE_ASM, "File stored at: " + receivedFile.getAbsolutePath());
-        // form.showToast("File stored at: " + receivedFile.getAbsolutePath());
-        fos.flush();
-        fos.close();
+        Log.d(LogTags.AWARE_ASM, "File saved to Downloads/WIFIDIRECT");
+        outputStream.flush();
+        outputStream.close();
         dataInputStream.close();
     }
     // sendFile function define here

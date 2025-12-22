@@ -30,15 +30,6 @@
         android:label="WifiDirectTestApp"
         android:usesCleartextTraffic="true" >
 
-        <!--
-             <LinearLayout
-            android:id="@+id/peerContainer"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        -->
-
-
         <!-- Broadcast receiver -->
         <receiver
             android:name="com.wifidirect.app.WiFiDirectBroadcastReceiver"
