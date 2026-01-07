@@ -20,6 +20,8 @@ import android.net.Uri;
 public class MyCustomForm {
     private Context context;
     private PeerChangeCallback peerChangeCb;
+    private Button sendButton;
+    private Uri latestFileUri;
 
     public MyCustomForm(Context context,PeerChangeCallback cb) {
         this.peerChangeCb = cb;
@@ -141,27 +143,44 @@ public class MyCustomForm {
     }
     public void AddSendButton(LinearLayout fileLayout,Uri fileUri)
     {
-        Log.d(LogTags.AWARE_ASM,"creating file button");
-        // Create button dynamically
-        Button sendButton = new Button(context);
-        sendButton.setText("Send");
-       // Create layout params with WRAP_CONTENT width & height
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        // Set gravity to center horizontally
-        params.gravity = Gravity.CENTER_HORIZONTAL;
-        // Apply the layout params to the button
-        sendButton.setLayoutParams(params);
-        sendButton.setPadding(16, 16, 16, 16);
-        // Add click listener
-        sendButton.setOnClickListener(v -> {
-            new Thread(() -> {
-                peerChangeCb.SendFileToServer(fileUri);
-            }).start();
-        });
-        fileLayout.addView(sendButton);
+        Log.d(LogTags.AWARE_ASM, "creating file button");
+        latestFileUri = fileUri;//update latest file name 
+        if (sendButton == null) 
+        {
+            sendButton = new Button(context);
+            sendButton.setText("Send");
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.gravity = Gravity.CENTER_HORIZONTAL;
+
+            sendButton.setLayoutParams(params);
+            sendButton.setPadding(16, 16, 16, 16);
+
+            sendButton.setOnClickListener(v -> {
+                if (latestFileUri == null) {
+                    Log.d(LogTags.AWARE_ASM, "latestFileUri is null");
+                    return;
+                }
+                new Thread(() -> {
+                    peerChangeCb.SendFileToServer(latestFileUri);
+                }).start();
+            });
+
+            fileLayout.addView(sendButton);
+        } else {
+            Log.d(LogTags.AWARE_ASM, "Send button already exists, reusing it");
+        }
+    }
+    public void resetButton()
+    {
+        Log.d(LogTags.AWARE_ASM, "reset button object as device is disconnected..");
+        if(sendButton != null)
+        {
+            sendButton = null;
+        }
     }
 
 }

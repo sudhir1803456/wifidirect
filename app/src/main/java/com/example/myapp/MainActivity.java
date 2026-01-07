@@ -154,6 +154,7 @@ public class MainActivity extends Activity implements PeerChangeCallback {
     public void OnDisconnected()
     {
         Log.d(LogTags.AWARE_ASM,"received OnDisconnected");
+        form.resetButton();
         if(isThisDeviceClient && socket != null)
         {
             Log.d(LogTags.AWARE_ASM,"socket close at client side");
